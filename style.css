@@ -1,0 +1,48 @@
+.button {
+	color:#000;
+	background-color:#f2f2f2;
+	padding:4mm;
+	margin:4mm;
+}
+a {
+	color:#000;
+	display:block;
+	text-decoration:none;
+	background-color:#f2f2f2;
+	padding:4mm;
+	margin:4mm;
+}
+table {
+	width:100%;
+	background:#fff;
+}
+tr {
+	background:#ddd;
+}
+th {
+	background:#000;
+	color:#fff;
+}
+body {
+	margin:0;
+	background:#fffff9;
+}
+h2 {
+	background-color:#2020A0;
+	color:#fff;
+	padding:0.4cm;
+	margin:0;
+	text-align:center;
+}
+input {
+	background-color:#eee;
+	border-color:#087;
+	font-size:1.4em;
+	margin:5%;
+	width:90%;
+	display:block;
+}
+.bar {
+	color:#2020a0;
+	text-align:center;
+}
