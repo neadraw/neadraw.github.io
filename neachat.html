@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<link href="style.css" rel="stylesheet">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=divice-width, minimum-scale=1, initial-scale=1">
+		<title>内聊网页版</title>
+		<style type="text/css" src="style.css"></style>
+	</head>
+	<body style="text-align:center">
+		<textarea id="textareaMessage"></textarea>
+		<a href="javascript:jion(textareaMessage.value)">进入群聊</a>
+		<a href="apk/neachat.apk" download="neachat.apk">下载APP</a>
+		<iframe style="height:100vh" class="button" id="messageShower" src="https://textdb.online/neachat(NEADRAW"></iframe>
+	</body>
+<script type="text/javascript">
+var textareaMessage = document.getElementById("textareaMessage");
+var messageShower = document.getElementById("messageShower");
+var jion = function (message)
+{
+	messageShower.src = "https://textdb.online/neachat(" + message;
+};
+</script>
+</html>
