@@ -1,6 +1,6 @@
 .button {
 	color:#000;
-	background-color:#f2f2f2;
+	background-color:#f8f8f4;
 	padding:4mm;
 	margin:4mm;
 }
@@ -8,7 +8,7 @@ a {
 	color:#000;
 	display:block;
 	text-decoration:none;
-	background-color:#f2f2f2;
+	background-color:#f8f8f4;
 	padding:4mm;
 	margin:4mm;
 }
@@ -17,11 +17,11 @@ table {
 	background:#fff;
 }
 tr {
-	background:#ddd;
+	background:#fff;
 }
 th {
-	background:#000;
-	color:#fff;
+	background:#fff;
+	color:#000;
 }
 body {
 	margin:0;
@@ -34,15 +34,19 @@ h2 {
 	margin:0;
 	text-align:center;
 }
-input {
+textarea {
 	background-color:#eee;
-	border-color:#087;
+	border-color:#2020A0;
 	font-size:1.4em;
 	margin:5%;
+	padding:0;
 	width:90%;
 	display:block;
 }
 .bar {
 	color:#2020a0;
 	text-align:center;
+}
+iframe {
+	border:0;
 }
