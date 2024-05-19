@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=divice-width, minimum-scale=1, initial-scale=1">
+	</head>
+	<body style="margin:0;text-align:center">
+		<canvas id="canvas" style="display:block;position:fixed" width="400" height="400"></canvas>
+<script type="text/javascript">
+var resize = function () {
+	var mWidth = window.innerWidth, mHeight = window.innerHeight, minSize = Math.min(mWidth, mHeight);
+	var style = canvas.style;
+	style.width = style.height = minSize + "px";
+	if (mWidth > mHeight) {
+		style.top = "0px";
+		style.left = (mWidth - mHeight) / 2 + "px";
+	} else {
+		style.left = "0px";
+		style.top = (mHeight - mWidth) / 2 + "px";
+	}
+};
+window.addEventListener("resize", resize);
+var canvas = document.getElementById("canvas"), ctx = canvas.getContext("2d");
+function reset() {
+	window.cells = new Array(1024);
+	canvas.style.background = "#000";
+	for (var i = 0; i < cells.length; i ++) {
+		var cell = [200, 200, 0, 0];
+		cells[i] = cell;
+	}
+}
+resize();
+var time = new Date().valueOf();
+function update() {
+	var delta = (new Date().valueOf() - time) / 1000, speed = delta * window.speed;
+	time = new Date().valueOf();
+	ctx.clearRect(0, 0, 400, 400);
+	var cells = window.cells, speed = 32 * delta;
+	for (var i = 0; i < cells.length; i ++) {
+		var cell = cells[i];
+		var cellx = cell[0], celly = cell[1];
+		cellx += cell[2] * speed;
+		celly += cell[3] * speed;
+		if (cellx < 0) {
+			cell[2] = Math.abs(cell[2]);
+			cellx = - cellx;
+		}
+		if (celly < 0) {
+			cell[3] = Math.abs(cell[3]);
+			celly = - celly;
+		}
+		if (cellx > 400) {
+			cell[2] = -Math.abs(cell[2]);
+			cellx = 400 - (cellx - 400);
+		}
+		if (celly > 400) {
+			cell[3] = -Math.abs(cell[3]);
+			celly = 400 - (celly - 400);
+		}
+		ctx.fillStyle = "#fff";
+		ctx.fillRect(cellx - 10, celly - 10, 20, 20);
+		cell[0] = cellx;
+		cell[1] = celly;
+	}
+	requestAnimationFrame(update);
+}
+canvas.onclick = function(eve) {
+	var x = eve.offsetX / canvas.offsetWidth * 400, y = eve.offsetY / canvas.offsetHeight * 400;
+	for (var i = 0; i < cells.length; i ++) {
+		var cell = cells[i];
+		var degrees = Math.atan2(x - cell[0], y - cell[1]), s = 10 + i / 200;
+		cell[2] = Math.sin(degrees) * s;
+		cell[3] = Math.cos(degrees) * s;
+	}
+};
+reset();
+update();
+</script>
+	</body>
+</html>
