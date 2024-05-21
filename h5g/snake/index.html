@@ -1,1 +1,95 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=divice-width, minimum-scale=1, initial-scale=1">
+<style>
+.but {
+	font-size:2em;
+	text-align:center; 
+	width:33%;
+	position:fixed;
+	background:#8800ff66;
+	color:#fff;
+	margin:0
+}
+</style>
+</head>
+<body style="background:#f48;text-align:center">
+	<canvas id="canvas" style="width:100%;background:#fff" width="1200" height="1200"></canvas>
+	<p style="height:10em"></p>
+	<p class="but" style="left:33.5%;bottom:4em" onclick="set(2)">U</p>
+	<p class="but" style="left:0em;bottom:2em" onclick="set(1)">L</p>
+	<p class="but" style="left:33.5%;bottom:2em" onclick="set(0)" id="l"></p>
+	<p class="but" style="right:0%;bottom:2em" onclick="set(3)">R</p>
+	<p class="but" style="left:33.5%;bottom:0%" onclick="set(4)">D</p>
+</body>
+<script type="text/javascript">
+var cxt = document.getElementById("canvas").getContext("2d"), snk, dir, fds, can = true;
+function res() {
+	dir = 4;
+	snk = [24, 0];
+	fds = [rdm(576)];
+}
+function run() {
+	document.getElementById("l").innerHTML = can ? snk.length - 2: "已暂停";
+	if (!can) {
+		setTimeout(run, 200);
+		return;
+	}
+	var sb = snk[snk.length - 1];
+	document.onkeydown = function(ven) {
+		var k = window.event ? ven.keyCode: ven.which;
+		if (k > 36 && k < 41) set(k - 36);
+	};
+	for (var i = snk.length - 1;i > 0;i --) snk[i] = snk[i - 1];
+	snk[0] += dir == 1 ? snk[0] % 24 == 0 ? 23: -1: dir == 2 ? snk[0] < 24 ? 552: -24: dir == 3 ? (snk[0] + 1) % 24 == 0 ? -23: 1: dir == 4 ? snk[0] > 552 - 1 ? -24 * 23: 24: 0;
+	for (var i = 0;i < fds.length;i ++) {
+		var su = -1;
+		if (fds[i] == snk[0]) {
+			snk.length += 1;
+			snk[snk.length - 1] = sb;
+			su = rdm(4);
+		}
+		if (su > 1 && fds.length < 13) {
+			fds.length ++;
+			fds[fds.length - 1] = snk[1];
+		}
+		for (var j = 0;j < snk.length;j ++)if (fds[i] == snk[j]) fds[i] = rdm(576);
+		if (su == 1 && fds.length > 1 && i == fds.length - 1) fds.length -= 1;
+	}
+	for (var i = 4;i < snk.length;i ++) if (snk[0] == snk[i]) {
+			ren();
+			alert((snk.length - 2) + "\n你输了\n即使如此我也依然爱着你");
+			res();
+			break;
+		}
+	ren();
+	setTimeout(run, 1000 / Math.min(1 + snk.length / 5, 5));
+}
+function ren() {
+	cxt.clearRect(0, 0, 1200, 1200);
+	das(fds, "#f48");
+	das(snk, "#948");
+}
+function set(v) {
+	if (v == 0) can = !can;
+	dir = v == 1 ? snk[1] + 1 == snk[0] ? dir: 1: v == 2 ? snk[1] + 24 == snk[0] ? dir: 2: v == 3 ? snk[1] - 1 == snk[0] ? dir: 3: v == 4 ? snk[1] - 24 == snk[0] ? dir: 4: dir;
+}
+function x(v) {
+	return v % 24;
+}
+function y(v) {
+	return (v - x(v)) / 24;
+}
+function das(a, s) {
+	cxt.fillStyle = s;
+	for (var i = 0;i < a.length;i ++)cxt.fillRect(x(a[i]) * 50, y(a[i]) * 50, 50, 50);
+}
+function rdm(n) {
+	return Math.floor(Math.random() * n);
+}
+res();
+run();
+</script>
+</html>
