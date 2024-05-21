@@ -1,1 +1,101 @@
-
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	</head>
+	<body style="margin:0px;padding:0px;height:100%;background:#111;">
+		<canvas id="canvas" width="400" height="400" style="display:block;position:fixed">
+		</canvas>
+		<p id="ele" style="position:fixed;right:4%;color:#ffffffc0;user-select:none;background:#0000ff80;padding:2%;" onclick="window.isPause = window.isPause == null ? true: null"></p>
+	</body>
+<script type="text/javascript">
+var canvas = document.getElementById("canvas"), ctx = canvas.getContext("2d");
+var resize = function () {
+	var mWidth = window.innerWidth, mHeight = window.innerHeight, minSize = Math.min(mWidth, mHeight);
+	var style = canvas.style;
+	style.width = style.height = minSize + "px";
+	if (mWidth > mHeight) {
+		style.top = "0px";
+		style.left = (mWidth - mHeight) / 2 + "px";
+	} else {
+		style.left = "0px";
+		style.top = (mHeight - mWidth) / 2 + "px";
+	}
+};
+window.addEventListener("resize", resize);
+resize();
+var beginTime, endTime, deltaTime;
+var y, size = 20, gravity, blocks, isOver, value;
+var create = function () {
+	gravity = 0;
+	y = 200;
+	blocks = new Array(36);
+	for (var i = 0; i < blocks.length; i ++) {
+		blocks[i] = [- size - 1, 0, 0, 0];
+	}
+	isOver = false;
+	value = 0;
+};
+create();
+canvas.onclick = function () {
+	gravity = 0.9;
+};
+var loop = function () {
+	endTime = new Date().getTime();
+	deltaTime = (endTime - beginTime) / 1000;
+	beginTime = endTime;
+	if (window.isPause) {
+		requestAnimationFrame(loop);
+		return;
+	}
+	var width = canvas.width, height = canvas.height;
+	ctx.clearRect(0, 0, width, height);
+	var min = Math.min(width, height), max = Math.max(width, height);
+	ctx.fillStyle = "#eee";
+	ctx.fillRect(0, 0, 400, 400);
+	ctx.fillStyle = "#087";
+	ctx.fillRect(0, y, size, size);
+	ctx.fillStyle = "#b02";
+	for (var i = 0; i < blocks.length; i ++) {
+		var block = blocks[i];
+		ctx.fillRect(block[0] - 3, block[1] - 3, size + 6, size + 6);
+	}
+	if (isOver) {
+		if (value > localStorage.getItem("best")) {
+			localStorage.setItem("best", value);
+		}
+		create();
+	}
+	gravity -= deltaTime * 1.6;
+	y -= gravity * deltaTime * 150;
+	document.onkeydown = function(ven) {
+		if (window.event ? ven.keyCode: ven.which == 8) canvas.onclick();
+	};
+	for (var i = 0; i < blocks.length; i ++) {
+		var block = blocks[i];
+		if (Math.abs(block[0]) < size && Math.abs(block[1] - y) < size) {
+			isOver = true;
+		}
+		block[0] -= block[2] * deltaTime;
+		block[1] += block[3] * deltaTime
+		if (block[0] < - size) {
+			block[0] = 400 + Math.random() * 100;
+			block[1] = Math.random() * (400 - size);
+			if (block[2] != 0) {
+				value ++;
+			}
+			block[2] = 10 + Math.random() * 150;
+			block[3] = - 50 + Math.random() * 100;
+		}
+	}
+	if (y > 400 || y < - size) {
+		isOver = true;
+	}
+	document.getElementById("ele").innerHTML = "HI: " + localStorage.getItem("best") + " " + value;
+	requestAnimationFrame(loop);
+};
+beginTime = new Date().getTime();
+loop();
+</script>
+</html>
