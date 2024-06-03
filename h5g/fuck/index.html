@@ -37,6 +37,11 @@ body.src = "body";
 dick.src = "kunbar";
 function update()
 {
+	if (window.sb != 0)
+	{
+		requestAnimationFrame(update);
+		return;
+	}
 	var delta = (new Date().valueOf() - time) / 1000, speed = delta * window.speed;
 	time = new Date().valueOf();
 	ctx.clearRect(0, 0, 400, 400);
