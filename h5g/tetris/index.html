@@ -1,1 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=0">
+		<title>俄罗斯方块</title>
+	</head>
+	<body style="margin:0;padding:0;background:#464;text-align:center">
+		<canvas id="canvas" width="200" height="400" style="display:block;position:fixed;background:#ddd"></canvas>
+		<p id="linesElement" style="position:fixed;margin:0;padding:0;color:#087;font-size:2em"></p>
+	</body>
+<script type="text/javascript">
+var canvas = document.getElementById("canvas"), linesElement = document.getElementById("linesElement"), ctx = canvas.getContext("2d");
+var resize = function()
+{
+	var width = window.innerWidth, height = window.innerHeight;
+	var style = canvas.style, styleL = linesElement.style;
+	var styleWidth, styleHeight;
+	if (height / width >= 2)
+	{
+		styleWidth = width;
+		styleHeight = width * 2;
+		styleL.top = style.top = (height - styleHeight) / 2 + "px";
+		styleL.left = style.left = "0px";
+	}
+	else
+	{
+		styleHeight = height;
+		styleWidth = height / 2;
+		styleL.left = style.left = (width - styleWidth) / 2 + "px";
+		styleL.top = style.top = "0px";
+	}
+	style.width = styleWidth + "px";
+	style.height = styleHeight + "px";
+};
+window.addEventListener("resize", resize);
+resize();
 
+var temap, tetris, nextTetris, deletedLinesCount;
+
+var reset = function()
+{
+	temap = new Array(21);
+	for (var i = 0; i < 20; i ++)
+	{
+		temap[i] = newLine(false);
+	}
+	temap[20] = newLine(true);
+	tetris = nextTetris = null;
+	deletedLinesCount = 0;
+	reloadTetris();
+	update(true);
+};
+var newLine = function (value)
+{
+	var line = new Array(10);
+	for (var i = 0; i < 10; i ++)
+	{
+		line[i] = value;
+	}
+	return line;
+};
+
+var updateDuration = 320;
+var update = function(run)
+{
+	ctx.fillStyle = "#eee";
+	ctx.fillRect(0, 80, 200, 320);
+	ctx.fillStyle = "#ddd";
+	for (var x = 0; x < 5; x ++)
+	{
+		ctx.fillRect(x * 40, 80, 20, 320);
+	}
+	ctx.fillStyle = "#ccc";
+	ctx.fillRect(0, 0, 200, 80);
+	if (run)
+	{
+		tetrisY += 1;
+	}
+	ctx.fillStyle = "#444";
+	for (var y = 0; y < 21 && run; y ++)
+	{
+		var line = temap[y], trueCount = 0;
+		for (var x = 0; x < 10; x ++)
+		{
+			var block = line[x];
+			if (block)
+			{
+				trueCount ++;
+				for (var i = 0; i < 8; i += 2)
+				{
+					var tetx = tetrisX + tetris[i];
+					var tety = tetrisY + tetris[i + 1];
+					if (x == tetx & y == tety)
+					{
+						tetrisY --;
+						for (var i = 0; i < tetris.length; i += 2)
+						{
+							tetx = tetrisX + tetris[i];
+							tety = tetrisY + tetris[i + 1];
+							temap[tety][tetx] = true;
+							updateDuration = 320;
+						}
+						reloadTetris();
+					}
+				}
+			}
+		}
+		if (trueCount >= 10 && y < 20)
+		{
+			for (var j = y; j > 0; j --)
+			{
+				temap[j] = temap[j - 1];
+			}
+			temap[0] = newLine(false);
+			deletedLinesCount ++;
+		}
+	}
+	for (var y = 0; y < temap.length; y ++)
+	{
+		var line = temap[y], trueCount = 0;
+		for (var x = 0; x < line.length; x ++)
+		{
+			var block = line[x];
+			if (block)
+			{
+				if (y < 4)
+				{
+					alert("GAME OVER");
+					reset();
+					return;
+				}
+				ctx.fillRect(x * 20, y * 20, 20, 20);
+			}
+		}
+	}
+	ctx.fillStyle = "#b22";
+	for (var i = 0; i < 8; i += 2)
+	{
+		ctx.fillRect((tetrisX + tetris[i]) * 20, (tetrisY + tetris[i + 1]) * 20, 20, 20);
+	}
+	ctx.fillStyle = "#087";
+	for (var i = 0; i < 8; i += 2)
+	{
+		ctx.fillRect((13 + nextTetris[i]) * 12, (3 + nextTetris[i + 1]) * 12, 12, 12);
+	}
+	linesElement.innerHTML = deletedLinesCount;
+	if(run) setTimeout("update(true)", updateDuration);
+};
+
+var tetrisTypes = [
+	[0, 0, 1, 0, 1, 1, 0, 1],
+	[0, 0, 0, 1, 0, -1, 0, -2],
+	[0, 0, - 1, 0, 1, 0, 0, 1],
+	[0, 0, 1, 0, - 1, 0, - 1, - 1],
+	[0, 0, 1, 0, - 1, 0, 1, - 1],
+	[0, 0, - 1, 0, 0, - 1, 1, - 1],
+	[0, 0, 1, 0, 0, - 1, - 1, - 1]
+];
+
+var tetrisX, tetrisY;
+
+var reloadTetris = function()
+{
+	tetrisX = randint(2) + 4;
+	tetrisY = 2;
+	if (nextTetris != null)
+	{
+		tetris = nextTetris;
+		nextTetris = randTetris();
+		return;
+	}
+	tetris = randTetris();
+	nextTetris = randTetris();
+};
+
+var rotateTetris = function(target, count)
+{
+	var result = new Array(8);
+	for (var i = 0; i < 8; i += 2)
+	{
+		result[i] = - target[i + 1];
+		result[i + 1] = target[i];
+	}
+	return count <= 1 ? result : rotateTetris(result, count - 1);
+};
+
+var randTetris = function()
+{
+	return rotateTetris(tetrisTypes[randint(tetrisTypes.length)], randint(4) + 1);
+};
+
+var tryMoveX = function(translateX)
+{
+	tetrisX += translateX;
+	for (var i = 0; i < 8; i += 2)
+	{
+		var tetx = tetrisX + tetris[i];
+		var tety = tetrisY + tetris[i + 1];
+		if (tetx < 0)
+		{
+			tetrisX ++;
+		}
+		else if (tetx > 9)
+		{
+			tetrisX --;
+		}
+	}
+	if (isCollisionWithTemap(tetris))
+	{
+		tetrisX -= translateX;
+		return false;
+	}
+	return true;
+};
+
+var isCollisionWithTemap = function(target)
+{
+	for (var y = 0; y < 21; y ++)
+	{
+		for (var x = 0; x < 10; x ++)
+		{
+			if (!temap[y][x]) continue;
+			for (var i = 0; i < 8; i += 2)
+			{
+				var tetx = tetrisX + target[i], tety = tetrisY + target[i + 1];
+				if (tetx == x && tety == y)
+				{
+					return true;
+				}
+			}
+		}
+	}
+};
+
+var randint = function(bound)
+{
+	return Math.floor(Math.random() * bound);
+};
+reset();
+
+
+var touchedX, touchedY;
+
+document.addEventListener("touchstart", function(event)
+{
+	touchedX = event.touches[0].clientX;
+	touchedY = event.touches[0].clientY;
+}, false);
+
+document.addEventListener("touchend", function(event)
+{
+	var x = event.changedTouches[0].clientX, y = event.changedTouches[0].clientY;
+	var angle = (Math.atan2(x - touchedX, y - touchedY) * 180 / Math.PI + 225) % 360
+	var type = Math.floor(angle / 90);
+	playerInput(type);
+}, false);
+
+canvas.onclick = function(event)
+{
+	if (event.offsetY / canvas.offsetHeight * 400 < 80) alert("已暂停");
+};
+
+var playerInput = function(type)
+{
+	switch (type)
+	{
+		case 3:
+			tryMoveX(1);
+			break;
+		case 1:
+			tryMoveX(- 1);
+			break;
+		case 0:
+			newTetris = rotateTetris(tetris, 1);
+			if (!isCollisionWithTemap(newTetris))
+			{
+				tetris = newTetris;
+				tryMoveX(0);
+			}
+			break;
+		case 2:
+			updateDuration /= 16;
+			break;
+	}
+	if (type != 2) update(false);
+};
+</script>
+</html>
