@@ -12,25 +12,32 @@
 			background:#fffffd;
 			text-align:center;
 		}
-		#player_icon {
+		#_i {
 			width:4cm;
 			height:4cm;
 			display:inline;
 			margin:0.6cm
+			box-shadow: 0.4mm 0.4mm 4mm #21212120, -0.4mm -0.4mm 4mm #21212120;
 		}
-		img {
-		    box-shadow: 0.4mm 0.4mm 4mm #21212120, -0.4mm -0.4mm 4mm #21212120;
+		a {
+			color:#a00022;
+			display:block;
+			text-decoration:none;
+			padding:4mm;
+			margin:4mm;
 		}
 	</style>
 	<body>
-		<img src="javascript:a[1]"/>
-		<p id="song_name"></p>
-		<p id="song_author"></p>
-		<audio src="javascript:a[0]" controls></audio>
-		<a id="music_lrc" href="javascript:alert(a[4])">查看歌词</a>
+		<img id="_i"/>
+		<p id="_n"></p>
+		<p id="_a"></p>
+		<audio id="_m" controls></audio>
+		<a href="javascript:alert(a[4])">查看歌词</a>
 	</body>
 <script type="text/javascript">
-document.getElementById("song_name").innerHTML = a[2];
-document.getElementById("song_author").innerHTML = a[3];
+document.getElementById("_m").innerHTML = a[0];
+document.getElementById("_i").innerHTML = a[1];
+document.getElementById("_n").innerHTML = a[2];
+document.getElementById("_a").innerHTML = a[3];
 </script>
 </html>
