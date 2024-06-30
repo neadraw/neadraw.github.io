@@ -3,7 +3,6 @@
 	<head>
 	 	<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=0"/>
-		<script type="text/javascript">var a = decodeURI(window.location.search.substring(1)).split('|');</script>
 	</head>
 	<style type="text/css">
 		body {
@@ -16,7 +15,7 @@
 			width:4cm;
 			height:4cm;
 			display:inline;
-			margin:0.6cm
+			margin:0.6cm;
 			box-shadow: 0.4mm 0.4mm 4mm #21212120, -0.4mm -0.4mm 4mm #21212120;
 		}
 		a {
@@ -35,8 +34,9 @@
 		<a href="javascript:alert(a[4])">查看歌词</a>
 	</body>
 <script type="text/javascript">
-document.getElementById("_m").innerHTML = a[0];
-document.getElementById("_i").innerHTML = a[1];
+var a = decodeURI(window.location.search.substring(1)).split('|');
+document.getElementById("_m").src = a[0];
+document.getElementById("_i").src = a[1];
 document.getElementById("_n").innerHTML = a[2];
 document.getElementById("_a").innerHTML = a[3];
 </script>
