@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	 	<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=0"/>
+		<script type="text/javascript">var a = decodeURI(window.location.search.substring(1)).split('|');</script>
+	</head>
+	<style type="text/css">
+		body {
+			margin:0px;
+			padding:0px;
+			background:#fffffd;
+			text-align:center;
+		}
+		#player_icon {
+			width:4cm;
+			height:4cm;
+			display:inline;
+			margin:0.6cm
+		}
+		img {
+		    box-shadow: 0.4mm 0.4mm 4mm #21212120, -0.4mm -0.4mm 4mm #21212120;
+		}
+	</style>
+	<body>
+		<img src="javascript:a[1]"/>
+		<p id="song_name"></p>
+		<p id="song_author"></p>
+		<audio src="javascript:a[0]" controls></audio>
+		<a id="music_lrc" href="javascript:alert(a[4])">查看歌词</a>
+	</body>
+<script type="text/javascript">
+document.getElementById("song_name").innerHTML = a[2];
+document.getElementById("song_author").innerHTML = a[3];
+</script>
+</html>
