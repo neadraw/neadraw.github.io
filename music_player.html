@@ -1,17 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
-	 	<meta charset="UTF-8"/>
+		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=0"/>
-	</head>
-	<style type="text/css">
+		<style type="text/css">
 		body {
 			margin:0px;
 			padding:0px;
 			background:#fffffd;
 			text-align:center;
 		}
-		#_i {
+		#_pic {
 			width:4cm;
 			height:4cm;
 			display:inline;
@@ -26,18 +25,18 @@
 			margin:4mm;
 		}
 	</style>
+	</head>
 	<body>
-		<img id="_i"/>
-		<p id="_n"></p>
-		<p id="_a"></p>
-		<audio id="_m" controls></audio>
-		<a href="javascript:alert(a[4])">查看歌词</a>
-	</body>
+		<img id="_pic"/>
+		<p id="_title"></p>
+		<p id="_author"></p>
+		<audio id="_url" controls></audio> <a href="javascript:alert(params.get('lrc'))">查看歌词</a>
 <script type="text/javascript">
-var a = decodeURI(window.location.search.substring(1)).split('|');
-document.getElementById("_m").src = a[0];
-document.getElementById("_i").src = a[1];
-document.getElementById("_n").innerHTML = a[2];
-document.getElementById("_a").innerHTML = a[3];
+var params = new URLSearchParams(window.location.search);
+document.getElementById("_url").src = params.get("url");
+document.getElementById("_pic").src = params.get("pic");
+document.getElementById("_title").innerHTML = params.get("title");
+document.getElementById("_author").innerHTML = params.get("author");
 </script>
+	</body>
 </html>
